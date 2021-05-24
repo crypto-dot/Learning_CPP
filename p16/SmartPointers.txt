@@ -1,0 +1,187 @@
+-Issues with Raw Pointers
+
+~C++ provides absolute flexibility with memory management
+*Allocation
+*Deallocation
+*Lifetime Management
+
+~Some Potentially Serious Problems
+*Uninitialized "wild" pointers
+*Memory leaks
+*Dangling Pointers
+*Not Exception Safe
+
+~Ownership?
+*Who owns the pointers?
+*When should a pointer be deleted?
+
+-What are smart pointers?
+*Objects
+*Can only point to heap allocated memory
+*Automatically call delete when no longer needed
+*Adhere to RAII principles
+*C++ Smart Pointers
+-Unique Pointer
+-Shared pointer
+-Weak pointer
+
+*Must include <memory>
+*Defined by class templates
+*Wrapper around a raw pointer
+*Overloaded operators (Dereference (*),Member selection (->),Pointer aritmetic is NOT SUPPORTED (++,--,etc.)
+*Can have custom deleters
+
+ex.
+{
+std::smart_pointer<Some_class> ptr = ...;
+ptr->method();
+cout << *ptr << endl;
+}
+//ptr will automatically be deleted when no longer needed
+
+-RAII - Resource Acquisition Is Initialization
+*Common idiom or pattern used in software design based on container object lifetime
+*RAII objects are allocated on the stack
+
+R A
+*Resource Acquisition (open a file,allocate memory,or acquire a lock)
+I I
+*Is Initialization (the resource is acquired in the constructor)
+
+*Resource relinquish
+*Happens in the destructor
+*Close the file
+*Deallocate the memory
+*Release the lock
+
+-Unique_ptr
+*Simple smart pointer - very efficient!
+
+-Unique_ptr<T>
+*Points to an Object T on the heap
+*It is unique - there can only be one unique_ptr<T> pointing to an object on the heap
+*Owns what it points to
+*Cannot be assigned or copied
+*CAN be moved
+*When the pointer is destroyed, what it points to is automatically destroyed.
+
+ex.
+{
+std::unique_ptr<int> p1 {new int{100}};
+std::cout << *p1 << std::endl; //100
+std::cout << p1.get() << std::endl //returns the pointer to the managed object
+*p1 = 200;
+std::cout << *p2 << std::endl; //200
+p1.reset(); //points the pointer back to NULLPTR
+if(p1){
+    std::cout << *p1 << std::endl; (Won't execute if statements only work if the pointer is pointing to something)
+}
+
+} //automatically deleted
+
+Important ex.
+{
+    std::vector<std::unique_ptr<int>> vec; //creates a vector of unique ptrs
+    std::unique_ptr<int> p1 {new int {100}};
+    vec.pushback(p1); //will cause an error Unique pointers cannot be copied (pushback method copies an object then places in in the vector!)
+    vec.pushback(std::move(p1)); //Works fine since unique ptrs can be moved
+}
+ex. (C++14 onwards) Make unique functions allows us to avoid the new keyword entirely allowing for more efficient code since it makes the managed object and the uniqueptr all in one step
+{
+    std::unique_ptr<int> p1 {make_unique<int>(100)};
+    std::unique_ptr<Account> p2 {make_unique<Account>("Curly",100)};
+    auto p3 = make_unique<Player>("Hero",10,100); //Auto keyword can make the code much more readable
+}
+
+-Shared_ptrs
+*Provides ownership of heap objects.
+*Points to an object of type T on the heap.
+*it is not unique-there can be many shared_ptrs pointing to the same object on the heap
+*CAN be assigned and moved
+*CAN be moved
+*Doesn't support managing arrays by default
+*When  the use count is 0,the managed object on the heap is destroyed
+
+ex.
+{
+    std::shared_ptr<int> p1 {new int{100}};
+    std::cout << *p1 << std::endl; //100
+    *p1 = 200;
+    std:: cout << *p1 << std::endl; // 200
+}
+
+ex. (use count method can be used to return the number of shared pointers managing the specific heap object that the pointer is pointing to.)
+{
+    std::shared_ptr<int> p1 {new int {100} };
+    std::cout << p1.use_count << std::endl;
+
+    std::shared_ptr<int> p2 {p1};
+    std::cout << p1.use_count<< std::endl; //2
+    std::cout << p2.use_count << std::endl; //2
+
+    p1.reset(); //Decrements use count and p1 is set to null
+    std::cout << p1.use_count << std::endl; //0
+    std::cout << p2.use_count << std::endl; //1
+} //automatically deleted
+
+{
+    std::vector<std::shared_ptr<int>> vec;
+    std::shared_ptr<int> p1 {new int{100}};
+    vec.pushback(p1); //This is ok since shared pointers can be copied
+    std::cout << p1.use_count << std::endl; //2 since the pointer was copied to the vector container
+} //automatically deleted
+
+shared_ptr - make_shared (around since C++) (Make shared is much more efficient than using the new keyword
+{
+    std::shared_ptr<int> p1 = make_shared<int>(100); //use_count 1
+    std::shared_ptr<int> p2{p1}; //use_count 2
+    std::shared_ptr<int> p3; //Initializes to null_ptr
+    p3 = p1; //use_count 3
+}
+
+-Weak_ptr
+*Provides non-owning "weak" reference
+
+-Weak_ptr<T>
+*Points to an object type T on the heap
+*Does not participate in the owning relationship
+*Always created from a shared_ptr
+*Does NOT increment or decrement reference use count
+*Used to prevent strong reference cycles which could prevent objects from being deleted
+
+- Weak_ptr - Cyclic or circular reference
+*A refers to B
+*B refers to A
+*Shared strong ownership prevents heap deallocation
+
+     |       A      |          |       B      |
+     |  shared_ptr -|--------->|              |
+     |              |<---------|-- shared_ptr |
+     |______________|          |______________|
+
+     When A and B go out of scope which object's resources on the heap are destroyed?
+     The answer is none of their resources will be destroyed since A keeps B alive and B keeps A alive.
+     The weak_ptr solves this!
+     |       A      |          |       B      |
+     |  shared_ptr -|--------->|              |
+     |              |<~~~~~~~~~|~~ weak_ptr   |
+     |______________|          |______________|
+
+-Custom Deleters
+*Sometimes when we destroy a smart pointer we need to destroy more than just the object on the heap
+*These are special use-cases
+*C++ smart pointers allow you to create custom deleters
+*Lots of ways to achieve this
+*Functions
+*Lambdas
+*Others...
+*We cannot use make_shared or make_unique since these functions do not allow for custom deleters
+(The idea is that if you need a special way to delete these objects you probably need a special way to create them)
+
+-Custom Deleters (Function)
+void my_Deleter(Someclass *raw_Pointer){
+}
+    //Your custom deleter code
+    delete raw_Pointer;
+}
+unique_ptr<Someclass> ptr {new Someclass{},my_Deleter};
