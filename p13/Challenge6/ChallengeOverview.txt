@@ -1,0 +1,1 @@
+This challenge recreates the MyString class with member only methods and without Member methods

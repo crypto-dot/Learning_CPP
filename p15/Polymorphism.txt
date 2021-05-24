@@ -1,0 +1,123 @@
+-Polymorphism
+*Compile-time/early binding/static binding (overloading functions and operators)
+*Run-time/ late binding/ dynamic binding
+
+-Runtime Polymorphism
+*Being able to assign different meanings to the same function at run time
+*Allows us to program more abstractly
+*Think general vs specific
+*Let C++ figure out which functions to call at run-time
+
+-Not Default in C++, Run-time polymorphism is achieved via
+*Inheritance
+*Base class pointers or references
+
+-Virtual Functions
+*Redefined functions are bound statically
+*Overridden functions are bound dynamically
+*Virtual functions are overridden
+*Allow us to treat all objects generally as objects of the base class
+
+-Declaring Virtual Functions
+*Declare the function you want to override as virtual in the base class
+*Virtual functions are virtual all the way down the hierarchy from this point
+*Dynamic polymorphism only via Account class pointer or reference.
+
+Ex.
+class Account{
+virtual void withdraw(double amount){....}
+....
+};
+
+*Override the function in derived classes
+*Function signature and return type MUST MATCH EXACTLY (The compiler will treat it as a redefinition and statically bind it)
+*virtual keyword is not necessary for derived classes, however it is considered best practice
+*If you don't provide an overridden version it is inherited from its base class
+
+class Check : public Account{
+    virtual void withdraw(double amount){...}
+    ...
+};
+
+-Virtual Destructors
+*Problems can happen when we destroy polymorphic objects.
+*If a derived class is destroyed by deleting its storage via the base class pointer and the
+class has a non-virtual destructor.Then the behavior is undefined in the c++ standard.
+*derived objects must be destroyed in the correct order starting at the correct destructor
+*If a class has virtual functions always provide a public virtual destructor
+*If base class destructor is virtual then all the derived class destructors are virtual as well
+
+class Account {
+virtual void withdraw(double amount){...}
+virtual ~Account();
+};
+
+-Overrider specifier
+*We can override Base class virtual functions
+*The function signature and return must be EXACTLY  the same
+*If they are different then we HAVE A REDEFINITION NOT Overriding
+*Redefinition is statically bound
+*Overriding is dynamically bound
+*C++11 provides an overrider specifier to ensure that the compiler overrides
+
+class Check : public Account{
+    virtual void withdraw(double amount) const override{
+    ...}
+};
+
+-Final Specifier
+*When used at the class level:
+*Prevents a class from being derived from
+*When used at the method level:
+*Prevents virtual method from being overridden in derived classes
+
+class Base final {...};
+
+(cannot be derived from)
+
+class Derived final: public Base {
+...
+};
+
+-Base class references
+*We can also use base class references with dynamic polymorphism
+*Useful when we pass objects to functions that expect a base class reference
+
+-Pure virtual functions and Abstract classes
+
+-Abstract classes
+*Cannot instantiate objects
+*These classes are used as base classes in inheritance hierarchies
+*Often referred to as Abstract Base Classes
+
+-Concrete classes
+*Used to initiate objects from
+*All their member functions are defined
+
+-An Abstract base class:
+*is too generic to create an object from (shape,employee,account,player)
+*Serves as a parent to Derived classes that may have objects
+*Contains at least one pure virtual function
+
+-Pure virtual function
+*Used to make a class abstract
+*Specified with "=0" in its declaration
+
+virtual void function()= 0; //pure virtual function declaration
+
+*Typically they do not have any implementation (it is possible to give them implementation)
+*Derived classes MUST override the base class
+*If the derived class does not override the base class then the derived class is also abstract
+*Used when it doesn't make sense for a base class to have an implementation
+*But concrete classes must implement it
+
+virtual void draw() =0; //Shape
+virtual void defend() =0; //Player
+
+-What is using a class as an interface?
+*An abstract class that has only pure virtual functions
+*These functions provide a general set of services to the user
+*Provided as public
+*Each subclass is free to implement these services as needed
+*Every service (method) must be implemented
+*The service type information is strictly enforced.
