@@ -63,7 +63,6 @@ int main(){
         }
 
     };
-    cout << "12345678901234567890123456789012345678901234567890\n";
 
     int full_length_of_table {49};
     int cost_data_stream_length {8};
@@ -71,7 +70,7 @@ int main(){
     int PopulationBuffer {14};
     int CityBuffer {15};
 
-    cout << setw(10) << " " << tours.title << "\n";
+    cout << setw(10) << "" << tours.title << "\n";
     cout <<  setw(SpaceBufferCountry)  <<  left << "Country" << setw(CityBuffer) << "City" <<  setw(PopulationBuffer) << "Population"
     << setw(cost_data_stream_length) << right << "Cost\n" << left;
     cout << std::setfill('-') << std::setw(full_length_of_table) <<  "-" << "\n" << std::setfill(' ');
