@@ -238,6 +238,6 @@ else{
     std::cout << "Integer was not entered!\n";
 }
 std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); (Ignores everything after the whole value digit (since the integer can only store whole numbers) until the enter is pressed)
-
+//Basically prevents wierd bugs if a user enters 44 . 4 the 44 will be read as an integer and the space . space will not be read.
 }
 while(!done);
