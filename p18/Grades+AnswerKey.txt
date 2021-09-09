@@ -1,0 +1,13 @@
+BACDA
+Frank
+ADCBE
+Bob
+BADCE
+Sally
+CADAB
+Sam
+BACDA
+Pat
+BACDE
+Mat
+BACBA
