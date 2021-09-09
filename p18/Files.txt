@@ -229,7 +229,7 @@ bool done = false;
 
 do{
 std::cout << "Enter an integer: "; std::cin >> entry; std::cout << "\n";
-std::isstringstream iss{entry};
+std::istringstream iss{entry};
 
 if(iss >> value)
 std::cout << "Integer was entered \n";
