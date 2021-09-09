@@ -1,0 +1,243 @@
+Opening, reading, and Closing Files
+
+-Fstream and ifstream are commonly used for input files
+
+1.#include <fstream>
+2.Declare an fstream or ifstream object
+3.Connect it to a file on your file system (opens it for reading)
+4.Read the data from the file via the stream
+5. Close the stream
+
+Opening A file
+
+std::fstream file{".../file.txt",std::ios::in} (Opens the file in input mode (Allows us to read from the file but not write to it)
+std::fstream file {".../file.txt",std::ios::in | std::ios::binary } (Necessary when reading non-text files that contain binary data)
+(Also notice the bitwise operator, when used in the parameter such as the above it sets both the flags (in and binary) to true)
+(Also take note that the fstream class can be used for opening a file and reading and writing to the same file, therefore
+it is more common to use the ifstream class for just reading a file)
+
+std::ifstream file {".../file.txt",std::ios::in};
+std::ifstream file {".../file.txt"} (2nd parameter is optional since it is true by default)
+
+std::ifstream file {".../file.txt",std::ios::binary};
+
+//A common way to create and open fstream/ifstream objects is by using the open method since we won't always know beforehand what the name is
+
+std::ifstream in_file;
+std::string file_name;
+
+std::cin >> file_name; (get the file name from user)
+in_file.open(file_name); (file is opened)
+in_file.open(file_name,std::ios::binary);
+
+(It is important to make sure the file was opened, therefore a simple logic statement like the below can solve this problem)
+
+if(in_file.is_open()){
+    //Do what you want with said file
+}
+else {
+    //Output error message
+    // Does it exist?
+    // Terminate program?
+}
+
+(Another way to test if the file was opened)
+if(in_file){
+
+}
+else {
+
+}
+
+**IMPORTANT remember to always close your files!! For input files this is not that impactful, but for output files it makes a big difference**
+To close a file simply call the close method as such: in_file.close
+
+Reading from files using (>>)
+
+int num;
+double total;
+std::string name;
+
+File ex. below (text based file)
+
+100
+255.67
+Larry
+
+to read from this file we would do the following:
+
+in_file >> num;
+in_file >> total >> name;
+
+(Note that the extraction operator stops when it sees white space (Much like user input data from our programs) therefore
+it is best to use std::getline)
+ex.
+std::string line;
+std::getline(in_file,line);
+
+(Files can be read line by line using the in_file.eof() in conjunction with a while lop)
+std::ifstream in_file {"../myfile.txt"};
+std::string line;
+
+if(!in_file){
+    std::cerr << "File was not opened" << std::endl;
+    return 1; (terminate main)
+}
+
+//Eof() in while not considered good practice read here:https://stackoverflow.com/questions/5605125/why-is-iostreameof-inside-a-loop-condition-i-e-while-stream-eof-cons
+
+while(!in_file.eof()) (While not at the end of the file) {
+    std::getline(in_file,line);
+    std::cout << line << std::endl;
+}
+in_file.close();
+ex.end
+
+(Another way to write the above code)
+
+ex.
+std::ifstream in_file {"../myfile.txt"};
+std::string line;
+
+if(!in_file){
+    std::cerr << "File was not opened" << std::endl;
+    return 1; (terminate main)
+}
+(C++ allows us to embed many of the string input statements into the while loop, additionally the extraction operator can be embedded right into the while loop)
+
+while(getline(in_file,line)) (While not at the end of the file) {
+    std::cout << line << std::endl;
+}
+in_file.close();
+
+(Getting chars from a file )
+std::ifstream in_file {"../myfile.txt"};
+std::char c;
+ex. end
+
+ex.
+if(!in_file){
+    std::cerr << "File was not opened" << std::endl;
+    return 1; (terminate main)
+}
+(C++ allows us to embed many of the string input statements into the while loop, additionally the extraction operator can be embedded right into the while loop)
+
+while(in_file.get(c)) (While not at the end of the file) {
+    std::cout << c << std::endl;
+}
+in_file.close();
+ex.end
+
+Output Files
+
+fstream and ofstream are commonly used for output files
+
+1.#include <fstream>
+2.Declare an fstream or ofstream object
+3.Connect it to a file on your file system (opens it for writing)
+4.Write data to the file via the stream
+5.Close the stream
+
+*Output files will be created if they don't exist
+*Output files will be overwritten (truncated) by default
+*can be opened so that new writes append
+*Can be opened in text or binary modes.
+
+Opening a file (Fstream/ofstream)
+
+std::fstream out_file {"File.txt",std::ios::out}; (Opens the file in output mode (allows us to write to it but not read from it))
+std::fstream out_file {"File.txt",std::ios::out | std::ios::binary }; (opens the file in output mode and binary mode)
+
+std::ofstream out_file {"File.txt",std::ios::out}; (Std::ios::out flag is optional for the ostream object since it is true by default)
+std::ofstream out_file {"File.txt"}; (Same as above)
+std::ofstream out_file {"File.txt",std::ios::binary};
+
+//Truncating a file (discard) when opening
+std::ofstream out_file{"File.txt",std::ios::trunc};
+
+//Append on each write (Appends all further ostream objects to the end of the ostream object)
+std::ofstream out_file {"File.txt",std::ios::app};
+
+//Seek to end of stream when opening (Opens an existing file at the end of stream)
+std::ofstream out_file {"File.txt",std::ios::ate};
+
+(Using open method for files that require user input)
+
+ex.
+std::ofstream out_file;
+std::string file_name;
+
+cin >> file_name;
+
+out_file.open(file_name);
+out_file.open(file_name,std::ios::binary);
+ex. end
+
+String streams
+
+*Allows us to read or write from strings in memory much as we would read and write to files
+*Very powerful
+*Very useful for data validation
+
+Using String Streams
+
+stringstream,isstringstream, and ostringstream
+
+1. #include <sstream>
+2. Declare an stringstream, istringstream, or ostringstream object
+3. Connect it to a std::string
+4. Read/write data from/to the string stream using formatted I/O
+
+ex.
+int num {};
+double total {};
+std::string name {};
+std::string info{"Moe 100 1234.5"};
+std::istringstream iss{info};
+iss >> name >> num >> total;
+ex.end
+
+ex.
+int num {100};
+double total {1234.5};
+std::string name {"Moe"};
+
+std::ostringstream oss {};
+oss << name << " " << num << " " << total;
+std::cout << oss.str() << std::endl;
+ex.end
+
+ex. (data validation)
+
+int value {};
+std::string input {};
+
+std::cout << "Enter an integer: ";
+std::cin >> input;
+
+std::stringstream ss {input};
+if(ss >> value){
+    std::cout << "An integer was entered";
+}
+else{
+    std::cout << "An integer was NOT entered";
+}
+
+int value;
+std::string entry;
+bool done = false;
+
+do{
+std::cout << "Enter an integer: "; std::cin >> entry; std::cout << "\n";
+std::iistringstream iss{entry};
+
+if(iss >> value)
+std::cout << "Integer was entered \n";
+
+else{
+    std::cout << "Integer was not entered!\n";
+}
+std::cin.ignore(std::numeric_limits<std::streamsize>::max(),"\n"); (Ignores everything after the digit (since the integer can only store whole numbers) until the enter is pressed)
+
+}
+while(!done);
