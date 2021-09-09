@@ -237,7 +237,7 @@ std::cout << "Integer was entered \n";
 else{
     std::cout << "Integer was not entered!\n";
 }
-std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); (Ignores everything after the digit (since the integer can only store whole numbers) until the enter is pressed)
+std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n'); (Ignores everything after the whole value digit (since the integer can only store whole numbers) until the enter is pressed)
 
 }
 while(!done);
