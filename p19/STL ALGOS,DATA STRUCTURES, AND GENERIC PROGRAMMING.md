@@ -408,7 +408,7 @@ std::cout << std::endl;
 *  crbegin() and crend()  - Constant Reverse iterator
   
 ### Algorithms  
-[CPPReference](https:://en.cppreference.com/w/cpp/algorithm)
+[Algos](https:://en.cppreference.com/w/cpp/algorithm)
   
 * STL algorithms work on sequences of container elements  
 provided to them by an iterator  
