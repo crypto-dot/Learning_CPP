@@ -1,0 +1,32 @@
+C++ Lambda expressions
+
+*What is a lambda expression?
+-Motivation
+-Review of function objects (functors)
+-Relation between lambdas and function objects
+*Structure of a lambda expression
+*Type of lambda expressions
+-Stateless lambda expressions
+-Stateful lambda expression (capturing context)
+*Lambdas and the STL
+
+*Prior to C++11:
+-Function objects
+-Function pointers
+
+*We often write many short functions that control algorithms
+*These short functions would be encapsulated in small class to produce function objects
+*Many times the classes and functions are far removed from where they are used leading to modification,maintenance, and testing issues
+*Compiler cannot effectively inline these functions for efficiency
+
+ex. 1.
+Class Multiplier {
+    public:
+    Multiplier(uint64_t num) : num {num}{}
+    uint64_t operator(const uint64_t &num) const{
+        return
+    }
+
+    private:
+    uint64_t num;
+};
