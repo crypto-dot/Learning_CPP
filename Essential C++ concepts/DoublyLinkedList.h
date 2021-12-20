@@ -118,27 +118,50 @@ namespace dsa {
             }
             size_++;
         }
-        void addAt(size_t index,const T &element){
-            if(index < 0 || index > size_){
+        void addAt(size_t index,const T &element) {
+            if (index < 0 || index > size_) {
                 throw std::out_of_range("Out of range");
             }
-            if(index == size_){
+            if (index == size_) {
                 addLast(element);
                 return;
             }
-            if(index == 0){
+            if (index == 0) {
                 addFirst(element);
                 return;
             }
             Node<T> *trav = head_;
-            for(size_t i {0}; i < index; i++){
+            for (size_t i{0}; i < index; i++) {
                 trav = trav->next_;
-                }
-            element = new Node<T>(element,trav,trav->next_);
+            }
+            element = new Node<T>(element, trav, trav->next_);
             trav->next_->prev_ = element;
             trav->next_ = element;
             size_++;
-            }
+        }
+            template <typename T>
+            T removeFirst() {
+                T data = head_->data;
+                head_ = head_->next_;
+                --size_;
+
+                if(isEmpty()){
+                    delete tail_;
+                    tail_ = nullptr;
+                }
+                else
+                {
+                    delete head_->prev_;
+                    head_->prev_ = nullptr;
+                }
+                return data;
+        }
+            template <typename T>
+            T removeLast(){
+            T data = tail_->data_;
+            tail_ = tail_->prev_;
+
+        }
+    }
         };
-    };
 #endif //CPP_DOUBLYLINKEDLIST_H

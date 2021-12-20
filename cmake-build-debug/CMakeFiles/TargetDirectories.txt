@@ -1,0 +1,5 @@
+/Users/carlosarbizu/CLionProjects/Learning_CPP/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/carlosarbizu/CLionProjects/Learning_CPP/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/carlosarbizu/CLionProjects/Learning_CPP/cmake-build-debug/CMakeFiles/main.dir
+/Users/carlosarbizu/CLionProjects/Learning_CPP/cmake-build-debug/CMakeFiles/Testtester.dir
+/Users/carlosarbizu/CLionProjects/Learning_CPP/cmake-build-debug/CMakeFiles/Learning_CPP.dir

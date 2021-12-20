@@ -11,11 +11,6 @@ void insertionSort(int arr[],size_t size){
         while((j > 0) && (arr[j] < arr[j -1])){
             std::swap(arr[j],arr[j-1]);
             j--;
-            for(size_t h{0}; h < 4; h++){
-                std::cout << arr[h] << ' ';
-            }
-            std::cout << '\n';
-
         }
     }
 }
